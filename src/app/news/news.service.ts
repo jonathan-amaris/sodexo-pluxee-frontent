@@ -7,10 +7,18 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class NewsService {
+  uri: string = `https://api.spaceflightnewsapi.net/v4/articles/?limit=10`
+
   constructor(private httpClient:HttpClient) { }
 
-  getNews(): Observable<GetNewsResponse> {
-    const response = this.httpClient.get<GetNewsResponse>("https://api.spaceflightnewsapi.net/v4/articles/")
+  getNews(
+    offset: number,
+    ordering: string,
+    search: string = ''
+  ): Observable<GetNewsResponse> {
+    const getNewsUri = `${this.uri}&offset=${offset}&ordering=${ordering}&search=${search}`
+
+    const response = this.httpClient.get<GetNewsResponse>(getNewsUri)
 
     return response
   }
