@@ -1,9 +1,30 @@
+<button
+  mat-stroked-button
+  color="primary"
+  (click)="handleOrderEvent()"
+>Ordenar</button>
 
-<ul>
-  <li *ngFor="let news of newsList$">
-    <p>Titulo: {{ news.title }}</p>
+<mat-form-field>
+  <input matInput type="text" [(ngModel)]="search" placeholder="Search...">
+  <button matSuffix mat-icon-button aria-label="Search" (click)="handleSearchEvent()">
+    <mat-icon>search</mat-icon>
+  </button>
+</mat-form-field>
+
+<ul *ngIf="newsList.length > 0; else loading">
+  <li *ngFor="let news of newsList">
+   <p>Titulo: {{ news.title }}</p>
     <p>summary: {{ news.summary }}</p>
     <p class="mb-1">{{news.published_at | date: 'd MMM y' }}</p>
     <button (click)="addNewsToFavorite(news.id)">Add to Favorites</button>
   </li>
 </ul>
+
+<ng-template #loading>Loading...</ng-template>
+
+<mat-paginator
+  [length]="newsLength"
+  [pageSize]="10"
+  [hidePageSize]="true"
+  (page)="handlePageEvent($event)"
+></mat-paginator>
