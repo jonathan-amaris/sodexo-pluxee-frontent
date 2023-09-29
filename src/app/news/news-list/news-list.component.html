@@ -16,7 +16,7 @@
    <p>Titulo: {{ news.title }}</p>
     <p>summary: {{ news.summary }}</p>
     <p class="mb-1">{{news.published_at | date: 'd MMM y' }}</p>
-    <button (click)="addNewsToFavorite(news.id)">Add to Favorites</button>
+    <button (click)="addNewsToFavorite(news)">Add to Favorites</button>
   </li>
 </ul>
 

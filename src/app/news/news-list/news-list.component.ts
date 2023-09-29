@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { News } from '../news';
+import { News, OrderingEnum } from '../news';
 import { NewsService } from '../news.service';
 import { PageEvent } from '@angular/material/paginator';
 
@@ -12,50 +12,46 @@ export class NewsListComponent implements OnInit {
   newsList: News[] = []
 
   search = '';
-  newsLength: number = 0
-  offset: number = 0
-  ordering: string = '-published_at'
+  newsLength = 0
+  offset = 0
+  ordering: OrderingEnum = OrderingEnum.DESC
 
   constructor(private newsServices: NewsService) {}
 
-
-  ngOnInit(): void {
-    this.newsServices.getNews(this.offset, this.ordering, this.search)
+  getNewsFromService(offset: number, ordering: OrderingEnum, search: string) {
+    this.newsServices.getNews(offset, ordering, search)
       .subscribe((data) => {
         this.newsList = data.results
         this.newsLength = data.count
+
+        if (offset != this.offset) this.offset = offset
+        if (ordering != this.ordering) this.ordering = ordering
+        if (search != this.search) this.search = search
       });
   }
 
-  addNewsToFavorite(id: number) {
-    console.log({ id })
+  ngOnInit(): void {
+    this.getNewsFromService(this.offset, this.ordering, this.search)
   }
 
   handlePageEvent({ pageIndex, pageSize }: PageEvent) {
     const newOffSet = pageIndex * pageSize
 
-    this.newsServices.getNews(newOffSet, this.ordering, this.search)
-      .subscribe((data) => {
-        this.newsList = data.results
-        this.offset = newOffSet
-      });
+    this.getNewsFromService(newOffSet, this.ordering, this.search)
   }
 
   handleOrderEvent() {
-    const newOrdering = this.ordering === 'published_at' ? '-published_at' : 'published_at'
+    const newOrdering = this.ordering === OrderingEnum.ASC ? OrderingEnum.DESC : OrderingEnum.ASC
 
-    this.newsServices.getNews(this.offset, newOrdering, this.search)
-      .subscribe((data) => {
-        this.newsList = data.results
-        this.ordering = newOrdering
-      });
+    this.getNewsFromService(this.offset, newOrdering, this.search)
   }
 
   handleSearchEvent() {
-    this.newsServices.getNews(this.offset, this.ordering, this.search)
-      .subscribe((data) => {
-        this.newsList = data.results
-        this.newsLength = data.count
-      });
+    this.getNewsFromService(this.offset, this.ordering, this.search)
+  }
+
+  addNewsToFavorite({ id, title, summary, published_at }: News) {
+    this.newsServices.addNewsToFavorite({ id, title, summary, published_at })
+      .subscribe(() => {})
   }
 }
