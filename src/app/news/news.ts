@@ -1,16 +1,12 @@
 export interface News {
   id: number;
   title: string;
-  description?: string;
   summary: string;
   published_at: string;
-  checkAsFavorite: boolean;
+  added_to_favorites_at?: string;
 }
 
-
-export interface GetNewsResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: News[]
+export enum OrderingEnum {
+  ASC = 'published_at',
+  DESC = '-published_at',
 }
