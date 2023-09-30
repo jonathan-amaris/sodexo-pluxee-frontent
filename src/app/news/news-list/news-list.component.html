@@ -1,30 +1,62 @@
-<button
-  mat-stroked-button
-  color="primary"
-  (click)="handleOrderEvent()"
->Ordenar</button>
-
-<mat-form-field>
-  <input matInput type="text" [(ngModel)]="search" placeholder="Search...">
-  <button matSuffix mat-icon-button aria-label="Search" (click)="handleSearchEvent()">
-    <mat-icon>search</mat-icon>
+<div class="header-actions">
+  <button
+    mat-stroked-button
+    color="primary"
+    (click)="handleOrderEvent()"
+    class="btn-ordering-styles"
+  >
+    <mat-icon *ngIf="ordering === 'published_at'">arrow_downward</mat-icon>
+    <mat-icon *ngIf="ordering === '-published_at'">arrow_upward</mat-icon>
+    Ordenar
   </button>
-</mat-form-field>
 
-<ul *ngIf="newsList.length > 0; else loading">
-  <li *ngFor="let news of newsList">
-   <p>Titulo: {{ news.title }}</p>
-    <p>summary: {{ news.summary }}</p>
-    <p class="mb-1">{{news.published_at | date: 'd MMM y' }}</p>
-    <button (click)="addNewsToFavorite(news)">Add to Favorites</button>
-  </li>
-</ul>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="search" placeholder="Search...">
+    <button matSuffix mat-icon-button aria-label="Search" (click)="handleSearchEvent()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
 
-<ng-template #loading>Loading...</ng-template>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="newsList">
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Titulo </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
+  
+    <!-- Resumen Column -->
+    <ng-container matColumnDef="summary">
+      <th mat-header-cell *matHeaderCellDef> Resumen </th>
+      <td mat-cell *matCellDef="let element"> {{element.summary}} </td>
+    </ng-container>
+  
+    <!-- Published_at Column -->
+    <ng-container matColumnDef="published_at">
+      <th mat-header-cell *matHeaderCellDef> Fecha de publicación </th>
+      <td mat-cell *matCellDef="let element"> {{element.published_at | date: 'd MMM y'}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button matTooltip="Basic" color="basic" (click)="addNewsToFavorite(element)">
+          <mat-icon>favorite</mat-icon>
+        </button>
+      </td>
+      
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-<mat-paginator
-  [length]="newsLength"
-  [pageSize]="10"
-  [hidePageSize]="true"
-  (page)="handlePageEvent($event)"
-></mat-paginator>
+  <mat-paginator
+    [length]="newsLength"
+    [pageSize]="10"
+    [hidePageSize]="true"
+    (page)="handlePageEvent($event)">
+  </mat-paginator>
+</div>

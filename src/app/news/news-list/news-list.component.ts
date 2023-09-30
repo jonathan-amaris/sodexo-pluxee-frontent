@@ -9,6 +9,8 @@ import { PageEvent } from '@angular/material/paginator';
   styleUrls: ['./news-list.component.css']
 })
 export class NewsListComponent implements OnInit {
+  displayedColumns = ['title', 'summary', 'published_at', 'symbol'];
+
   newsList: News[] = []
 
   search = '';
