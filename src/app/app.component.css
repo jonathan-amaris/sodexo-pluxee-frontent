@@ -1,7 +1,12 @@
-.toolbar {
-  margin-bottom: 50px;
-}
+
 
 .toolbar-row {
   justify-content: center;
+}
+
+.container {
+  margin: auto;
+  width: 90%;
+  max-width: 1080px;
+  padding: 50px 0px;
 }
