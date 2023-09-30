@@ -11,6 +11,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class NewsListComponent implements OnInit {
   displayedColumns = ['title', 'summary', 'published_at', 'symbol'];
 
+  error: Boolean = false
   newsList: News[] = []
 
   search = '';
@@ -22,13 +23,18 @@ export class NewsListComponent implements OnInit {
 
   getNewsFromService(offset: number, ordering: OrderingEnum, search: string) {
     this.newsServices.getNews(offset, ordering, search)
-      .subscribe((data) => {
-        this.newsList = data.results
-        this.newsLength = data.count
+      .subscribe({
+        next: (data) => {
+          this.newsList = data.results
+          this.newsLength = data.count
 
-        if (offset != this.offset) this.offset = offset
-        if (ordering != this.ordering) this.ordering = ordering
-        if (search != this.search) this.search = search
+          if (offset != this.offset) this.offset = offset
+          if (ordering != this.ordering) this.ordering = ordering
+          if (search != this.search) this.search = search
+        },
+        error: () => {
+          this.error = true
+        }
       });
   }
 
