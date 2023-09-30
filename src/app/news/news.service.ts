@@ -1,24 +1,56 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { GetNewsResponse, News } from './news';
+import { Observable } from 'rxjs';
+import { News } from './news';
 import { HttpClient } from '@angular/common/http';
+
+interface GetNewsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: News[]
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
-  uri: string = `https://api.spaceflightnewsapi.net/v4/articles/?limit=10`
-
-  constructor(private httpClient:HttpClient) { }
+  spaceFlightNewsApi = `https://api.spaceflightnewsapi.net/v4/articles/?limit=10`
+  favoriteNewsApi = `http://localhost:9090/api/v1/news/favorites`
+  
+  constructor(private httpClient:HttpClient) {}
 
   getNews(
     offset: number,
     ordering: string,
     search: string = ''
   ): Observable<GetNewsResponse> {
-    const getNewsUri = `${this.uri}&offset=${offset}&ordering=${ordering}&search=${search}`
+    const response = this.httpClient.get<GetNewsResponse>(
+      `${this.spaceFlightNewsApi}&offset=${offset}&ordering=${ordering}&search=${search}`
+    )
 
-    const response = this.httpClient.get<GetNewsResponse>(getNewsUri)
+    return response
+  }
+
+  addNewsToFavorite(news: News): Observable<News> {
+    const response = this.httpClient.post<News>(this.favoriteNewsApi, news)
+
+    return response
+  }
+
+  removeNewsFromFavorites(id: number): Observable<News> {
+    const response = this.httpClient.delete<News>(`${this.favoriteNewsApi}/${id}`)
+
+    return response
+  }
+
+  getFavoriteNews(
+    offset: number,
+    ordering: string,
+    search: string = ''
+  ): Observable<News[]> {
+    const response = this.httpClient.get<News[]>(
+      `${this.favoriteNewsApi}?offset=${offset}&ordering=${ordering}&search=${search}`
+    )
 
     return response
   }
