@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { News } from './news';
 import { HttpClient } from '@angular/common/http';
 
-interface GetNewsResponse {
+export interface GetNewsResponse {
   count: number;
   next: string | null;
   previous: string | null;

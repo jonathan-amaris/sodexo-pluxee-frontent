@@ -30,7 +30,6 @@ export class NewsListComponent implements OnInit {
 
           if (offset != this.offset) this.offset = offset
           if (ordering != this.ordering) this.ordering = ordering
-          if (search != this.search) this.search = search
         },
         error: () => {
           this.error = true
