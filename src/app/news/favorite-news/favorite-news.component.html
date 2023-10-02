@@ -1,0 +1,71 @@
+<div *ngIf="!error; else noticeError">
+  <div class="header-actions">
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="handleOrderEvent()"
+      class="btn-ordering-styles"
+    >
+      <mat-icon *ngIf="ordering === 'published_at'">arrow_downward</mat-icon>
+      <mat-icon *ngIf="ordering === '-published_at'">arrow_upward</mat-icon>
+      Ordenar
+    </button>
+  
+    <mat-form-field>
+      <input matInput type="text"  id="search" [(ngModel)]="search" placeholder="Search...">
+      <button matSuffix id="search-btn" mat-icon-button aria-label="Search" (click)="handleSearchEvent()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="newsList">
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Titulo </th>
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+    
+      <!-- Resumen Column -->
+      <ng-container matColumnDef="summary">
+        <th mat-header-cell *matHeaderCellDef> Resumen </th>
+        <td mat-cell *matCellDef="let element"> {{element.summary}} </td>
+      </ng-container>
+    
+      <!-- Published_at Column -->
+      <ng-container matColumnDef="published_at">
+        <th mat-header-cell *matHeaderCellDef> Fecha de publicación </th>
+        <td mat-cell *matCellDef="let element"> {{element.published_at | date: 'd MMM y'}} </td>
+      </ng-container>
+    
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button matTooltip="Basic" color="warn" (click)="removeNewsFromFavorites(element.id)">
+            <mat-icon>favorite</mat-icon>
+          </button>
+        </td>
+        
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator
+      [length]="newsLength"
+      [pageSize]="10"
+      [hidePageSize]="true"
+      (page)="handlePageEvent($event)">
+    </mat-paginator>
+  </div>
+</div>
+
+<ng-template #noticeError>
+  <div>
+    <p>An error has been occurred!</p>
+    <mat-icon aria-hidden="false" >error_outline</mat-icon>
+  </div>
+</ng-template>

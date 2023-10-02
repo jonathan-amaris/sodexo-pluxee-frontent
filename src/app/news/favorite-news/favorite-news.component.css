@@ -1,0 +1,30 @@
+.header-actions {
+  display: flex;
+  gap: 50px;
+  justify-content: flex-end;
+}
+
+.btn-ordering-styles {
+  height: 55px;
+  width: 150px;
+}
+
+.mat-column-title {
+  flex: 0 0 20% !important;
+  width: 20% !important;
+}
+
+.mat-column-summary {
+  flex: 0 0 55% !important;
+  width: 55% !important;
+}
+
+.mat-column-publish_at {
+  flex: 0 0 150px !important;
+  width: 150px !important;
+}
+
+.mat-column-symbol {
+  flex: 0 0 20px !important;
+  width: 20px !important;
+}
