@@ -134,7 +134,7 @@ describe('NewsListComponent', () => {
     expect(newsServiceGetNewsSpy).toHaveBeenCalled();
   });
 
-  it('Should called handleOrderEvent when OrderButton is pressed', () => {
+  it('Should called handleOrderEvent when OrderButton was pressed', () => {
     fixture.detectChanges();
     newsServiceGetNewsSpy.calls.reset();
 
@@ -149,6 +149,24 @@ describe('NewsListComponent', () => {
 
     expect(newsServiceGetNewsSpy).toHaveBeenCalled();
     expect(component.ordering).toBe(OrderingEnum.DESC);
+  });
+
+  it('Should called handleSearchEvent when InputButton was pressed and InputText was typed', () => {
+    fixture.detectChanges();
+    newsServiceGetNewsSpy.calls.reset();
+
+    const input = fixture.nativeElement.querySelector('#search');
+    const button = fixture.debugElement.query(By.css('#search-btn'));
+
+    fixture.detectChanges();
+
+    input.value = 'Nasa';
+
+    input.dispatchEvent(new Event('input'));
+    expect(component.search).toBe('Nasa');
+
+    button.triggerEventHandler('click', null);
+    expect(newsServiceGetNewsSpy).toHaveBeenCalled();
   });
 
   it('Should called addNewsToFavorite when FavoritesButton is pressed', () => {
