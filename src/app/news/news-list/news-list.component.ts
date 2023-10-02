@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { News, OrderingEnum } from '../news';
 import { NewsService } from '../news.service';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-news-list',
@@ -19,7 +20,10 @@ export class NewsListComponent implements OnInit {
   offset = 0
   ordering: OrderingEnum = OrderingEnum.DESC
 
-  constructor(private newsServices: NewsService) {}
+  constructor(
+    private newsServices: NewsService,
+    private snackbar: MatSnackBar
+  ) {}
 
   getNewsFromService(offset: number, ordering: OrderingEnum, search: string) {
     this.newsServices.getNews(offset, ordering, search)
@@ -59,6 +63,21 @@ export class NewsListComponent implements OnInit {
 
   addNewsToFavorite({ id, title, summary, published_at }: News) {
     this.newsServices.addNewsToFavorite({ id, title, summary, published_at })
-      .subscribe(() => {})
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Agregado como favoritos.', "", {
+            duration: 1000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          })
+        },
+        error: () => {
+          this.snackbar.open('Error, la noticia ya ha sido agregada.', "", {
+            duration: 1000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          })
+        },
+      })
   }
 }
