@@ -12,13 +12,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class FavoriteNewsComponent {
   displayedColumns = ['title', 'summary', 'published_at', 'symbol'];
 
-  error: Boolean = false
-  newsList: News[] = []
+  error: Boolean = false;
+  newsList: News[] = [];
 
   search = '';
-  newsLength = 0
-  offset = 0
-  ordering = OrderingEnum.DESC
+  newsLength = 0;
+  offset = 0;
+  ordering = OrderingEnum.FAV_DESC;
 
   constructor(
     private newsServices: NewsService,
@@ -32,8 +32,8 @@ export class FavoriteNewsComponent {
           this.newsList = data
           this.newsLength = data?.length
   
-          if (offset != this.offset) this.offset = offset
-          if (ordering != this.ordering) this.ordering = ordering
+          if (offset != this.offset) this.offset = offset;
+          if (ordering != this.ordering) this.ordering = ordering;
         },
         error: () => {
           this.error = true;
@@ -42,23 +42,25 @@ export class FavoriteNewsComponent {
   }
 
   ngOnInit(): void {
-    this.getFavoriteNewsFromService(this.offset, this.ordering, this.search)
+    this.getFavoriteNewsFromService(this.offset, this.ordering, this.search);
   }
 
   handlePageEvent({ pageIndex, pageSize }: PageEvent) {
-    const newOffSet = pageIndex * pageSize
+    const newOffSet = pageIndex * pageSize;
 
-    this.getFavoriteNewsFromService(newOffSet, this.ordering, this.search)
+    this.getFavoriteNewsFromService(newOffSet, this.ordering, this.search);
   }
 
   handleOrderEvent() {
-    const newOrdering = this.ordering === OrderingEnum.ASC ? OrderingEnum.DESC : OrderingEnum.ASC
+    const newOrdering = this.ordering === OrderingEnum.FAV_ASC
+      ? OrderingEnum.FAV_DESC
+      : OrderingEnum.FAV_ASC;
 
-    this.getFavoriteNewsFromService(this.offset, newOrdering, this.search)
+    this.getFavoriteNewsFromService(this.offset, newOrdering, this.search);
   }
 
   handleSearchEvent() {
-    this.getFavoriteNewsFromService(this.offset, this.ordering, this.search)
+    this.getFavoriteNewsFromService(this.offset, this.ordering, this.search);
   }
 
   removeNewsFromFavorites(id: number) {
@@ -71,6 +73,6 @@ export class FavoriteNewsComponent {
           horizontalPosition: 'right',
           verticalPosition: 'top',
         })
-      })
+      });
   }
 }
